@@ -1,454 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Northwind Data Platform</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-/* Layout: single scrolling page, Sierra-style story — hero, value props, tabbed pillars with UI snippets, clickable architecture, product catalog */
-:root{
-  --bg:#F5F8F9; --surface:#FFFFFF; --ink:#0F1B24; --muted:#586975; --line:#DAE2E6;
-  --accent:#0B7A75; --accent-ink:#FFFFFF; --accent-soft:#E0F1EF;
-  --ok:#2F855A; --warn:#B7791F; --bad:#C53030; --chip:#EEF3F5;
-  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
-  --f-body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0B1216; --surface:#121C22; --ink:#E4ECEF; --muted:#94A5AF; --line:#23323B;
-  --accent:#3DC3B8; --accent-ink:#06201E; --accent-soft:#12302D;
-  --ok:#5CC08B; --warn:#E3AA4E; --bad:#F07878; --chip:#1A262D; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0B1216; --surface:#121C22; --ink:#E4ECEF; --muted:#94A5AF; --line:#23323B;
-  --accent:#3DC3B8; --accent-ink:#06201E; --accent-soft:#12302D;
-  --ok:#5CC08B; --warn:#E3AA4E; --bad:#F07878; --chip:#1A262D; color-scheme:dark}
-
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
-.wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
-h1,h2,h3{font-family:var(--f-display);text-wrap:balance;letter-spacing:-.01em}
-.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
-.muted{color:var(--muted)}
-.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;transition:transform .15s}
-.btn-primary{background:var(--accent);color:var(--accent-ink)}
-.btn-ghost{border:1px solid var(--line);color:var(--ink)}
-.btn:hover{transform:translateY(-1px)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px}
-.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;background:var(--chip);font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
-.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
-section{padding-block:72px}
-section + section{border-top:1px solid var(--line)}
-
-/* Hero flow strip */
-.flow{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-.flow .stage{position:relative;z-index:1;text-align:center;padding:14px 8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;font-size:13px;min-width:0}
-.flow .stage b{display:block;font-family:var(--f-display);font-size:15px;font-weight:500}
-.flow .rail{position:absolute;left:6%;right:6%;top:50%;height:2px;background:var(--line)}
-.flow .pkt{position:absolute;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--accent);animation:ride 5s linear infinite}
-.flow .pkt:nth-child(2){animation-delay:-1.7s;opacity:.7}
-.flow .pkt:nth-child(3){animation-delay:-3.4s;opacity:.45}
-@keyframes ride{from{left:0}to{left:calc(100% - 10px)}}
-@media (max-width:640px){.flow{grid-template-columns:1fr}.flow .rail{display:none}}
-
-/* Tabs */
-.tab{padding:8px 16px;border-radius:999px;border:1px solid var(--line);font-weight:500;font-size:14px;color:var(--muted);background:var(--surface)}
-.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.progress{height:2px;background:var(--line);border-radius:2px;overflow:hidden}
-.progress i{display:block;height:100%;background:var(--accent);width:0}
-.progress i.run{animation:fill 7s linear forwards}
-@keyframes fill{to{width:100%}}
-
-/* Capability cards + snippets */
-.cap{display:flex;flex-direction:column;gap:14px;padding:18px;min-width:0}
-.snip{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px;min-height:170px;font-size:12.5px;overflow:hidden}
-.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
-.bar i{display:block;height:100%;background:var(--accent)}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
-.kv dt{color:var(--muted)}
-.code{font-family:var(--f-mono);font-size:11.5px;line-height:1.6;white-space:pre;color:var(--ink)}
-.code .k{color:var(--accent)} .code .s{color:var(--warn)}
-.fade-in{animation:fadeUp .45s ease both}
-@keyframes fadeUp{from{transform:translateY(6px);opacity:.3}to{transform:none;opacity:1}}
-
-/* Architecture */
-.arch{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:22px;min-width:820px;position:relative}
-.col h4{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.node{width:100%;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:13px;position:relative;transition:border-color .15s, box-shadow .15s}
-.node:hover{border-color:var(--accent)}
-.node.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.node.dim{opacity:.45}
-.node small{display:block;color:var(--muted);font-family:var(--f-mono);font-size:11px}
-.col:not(:last-child) .node::after{content:"";position:absolute;right:-23px;top:50%;width:22px;border-top:2px dashed var(--line)}
-.col:not(:last-child) .node.on::after,.col:not(:last-child) .node.hot::after{border-top-color:var(--accent);animation:dash 1s linear infinite}
-@keyframes dash{to{border-top-style:dashed;opacity:.5}}
-.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}
-
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Security: only files from this site may load. No CDNs, no inline scripts or styles. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <!-- Internal page: ask search engines not to index it -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Overview of the data platform: layers, architecture, and data products.">
+  <title>Data Platform Overview</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Edit content.js to change what the page says. app.js draws the page from it. -->
+  <script src="assets/js/content.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
 </head>
 <body>
-<script>
-/* ============================================================
-   EDIT THIS BLOCK FOR EACH DEMO — the page renders from it.
-   ============================================================ */
-const DEMO = {
-  brand: "Northwind Data Platform",
-  headline: "Trusted data, shipped as products.",
-  sub: "One governed platform that turns raw events from 40+ systems into data products every team can find, trust, and build on.",
-  flow: [
-    { name: "Sources", note: "ERP · CRM · events" },
-    { name: "Ingest", note: "Batch + CDC" },
-    { name: "Lakehouse", note: "Bronze → Gold" },
-    { name: "Data products", note: "Contracts + SLAs" },
-    { name: "Consumers", note: "BI · AI · APIs" }
-  ],
-  values: [
-    { t: "Trusted by default", d: "Every product ships with a contract, quality checks, and an owner on call." },
-    { t: "Self-serve", d: "Analysts find and query products in minutes, without filing a ticket." },
-    { t: "Governed by design", d: "PII is tagged at ingest, and access follows policy, not spreadsheets." },
-    { t: "Cost aware", d: "Spend is tracked per product, so we retire what nobody uses." }
-  ],
-  pillars: [
-    { name: "Ingest", title: "Land every source once, reliably.", caps: [
-      { t: "Streaming & CDC", d: "Change data capture from operational databases lands in under a minute.", snip: "stream" },
-      { t: "Schema registry", d: "Schema changes are versioned and checked before they break anything downstream.", snip: "schema" },
-      { t: "Source connectors", d: "Managed connectors for the systems the business already runs on.", snip: "connectors" } ]},
-    { name: "Model", title: "Clean, tested, documented models.", caps: [
-      { t: "Lineage", d: "See exactly which sources feed a metric, and what breaks if one changes.", snip: "lineage" },
-      { t: "Quality checks", d: "Tests run on every load; failures stop bad data before it reaches a dashboard.", snip: "quality" },
-      { t: "Freshness SLAs", d: "Each model declares how fresh it must be, and we alert when it isn't.", snip: "freshness" } ]},
-    { name: "Data products", title: "Products with owners, not tables.", caps: [
-      { t: "Data contracts", d: "A versioned promise: schema, semantics, freshness, and who to call.", snip: "contract" },
-      { t: "Catalog", d: "Search products by business term and see usage, owner, and trust score.", snip: "catalog" },
-      { t: "Serve anywhere", d: "Query in SQL, pull through an API, or feed a model with the same product.", snip: "api" } ]},
-    { name: "Governance", title: "Safe to share, easy to audit.", caps: [
-      { t: "Access policies", d: "Role and purpose-based access, applied the same way in every tool.", snip: "access" },
-      { t: "PII classification", d: "Sensitive columns are detected at ingest and masked automatically.", snip: "pii" },
-      { t: "Cost observability", d: "Compute and storage spend broken down by product and team.", snip: "cost" } ]}
-  ],
-  arch: [
-    { col: "Sources", nodes: [
-      { id: "erp", name: "SAP ERP", tech: "Oracle", to: ["cdc"] },
-      { id: "crm", name: "Salesforce", tech: "SaaS API", to: ["batch"] },
-      { id: "web", name: "Web & app events", tech: "Segment", to: ["stream"] } ]},
-    { col: "Ingest", nodes: [
-      { id: "cdc", name: "CDC", tech: "Debezium", to: ["bronze"] },
-      { id: "batch", name: "Batch loads", tech: "Fivetran", to: ["bronze"] },
-      { id: "stream", name: "Streaming", tech: "Kafka", to: ["bronze"] } ]},
-    { col: "Lakehouse", nodes: [
-      { id: "bronze", name: "Bronze · raw", tech: "Delta Lake", to: ["silver"] },
-      { id: "silver", name: "Silver · cleaned", tech: "dbt", to: ["gold"] },
-      { id: "gold", name: "Gold · modeled", tech: "dbt + tests", to: ["cust360", "orders", "churn"] } ]},
-    { col: "Data products", nodes: [
-      { id: "cust360", name: "Customer 360", tech: "v3.2 · Sales Ops", to: ["bi", "api"] },
-      { id: "orders", name: "Orders & Revenue", tech: "v2.0 · Finance", to: ["bi"] },
-      { id: "churn", name: "Churn Features", tech: "v1.4 · Data Science", to: ["ml"] } ]},
-    { col: "Consumers", nodes: [
-      { id: "bi", name: "Power BI", tech: "Exec dashboards", to: [] },
-      { id: "ml", name: "ML models", tech: "Churn scoring", to: [] },
-      { id: "api", name: "Product APIs", tech: "REST · GraphQL", to: [] } ]}
-  ],
-  details: {
-    erp: "Order, invoice, and material master tables. Replicated with change data capture so finance sees updates within a minute.",
-    crm: "Accounts, opportunities, and cases pulled every 15 minutes through the Salesforce bulk API.",
-    web: "Clickstream and in-app events, about 18M per day, published to Kafka topics by the tracking SDK.",
-    cdc: "Debezium reads the database log instead of querying tables, so source systems see no extra load.",
-    batch: "Managed connectors for SaaS sources. Retries, schema drift, and rate limits are handled for us.",
-    stream: "Kafka topics with schemas enforced by the registry. Consumers can replay 7 days of history.",
-    bronze: "Raw data exactly as it arrived, append-only. This is the audit trail and the replay source.",
-    silver: "Deduplicated, typed, and conformed. PII columns are masked here by policy.",
-    gold: "Business-ready models with tests on keys, nulls, and accepted values. Every load is tested.",
-    cust360: "One row per customer with lifetime value, segments, and support history. Freshness SLA: 1 hour.",
-    orders: "Certified revenue numbers that match the general ledger. Used for board reporting.",
-    churn: "Feature table for the churn model, point-in-time correct to avoid training leakage.",
-    bi: "Executive and regional dashboards built only on certified data products.",
-    ml: "Batch scoring runs nightly; scores flow back into Customer 360.",
-    api: "Low-latency reads for customer-facing apps, cached and rate limited."
-  },
-  products: [
-    { name: "Customer 360", owner: "Sales Ops", fresh: "1h", uptime: 99.8, users: 412, status: "ok" },
-    { name: "Orders & Revenue", owner: "Finance", fresh: "15m", uptime: 99.95, users: 287, status: "ok" },
-    { name: "Churn Features", owner: "Data Science", fresh: "24h", uptime: 98.9, users: 34, status: "warn" },
-    { name: "Inventory Positions", owner: "Supply Chain", fresh: "30m", uptime: 99.6, users: 158, status: "ok" }
-  ]
-};
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="notice" id="notice" hidden></div>
 
-function app(){
-  return {
-    ...DEMO,
-    active: 0, auto: true, tick: 0,
-    sel: "gold",
-    init(){
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(!reduce){ setInterval(()=>{ if(this.auto){ this.active = (this.active+1) % this.pillars.length; this.tick++; } }, 7000); }
-    },
-    pick(i){ this.active = i; this.auto = false; },
-    node(id){ for(const c of this.arch){ const n = c.nodes.find(n=>n.id===id); if(n) return {...n, col:c.col}; } },
-    related(id){
-      // upstream + downstream of selected node
-      const set = new Set([this.sel]);
-      const all = this.arch.flatMap(c=>c.nodes);
-      let grow = true;
-      while(grow){ grow=false; for(const n of all){ if(!set.has(n.id) && n.to.some(t=>set.has(t)) && this.isUp(n.id)){ set.add(n.id); grow=true; } } }
-      const down=[this.sel]; while(down.length){ const cur=all.find(n=>n.id===down.pop()); for(const t of cur.to){ if(!set.has(t)){ set.add(t); down.push(t);} } }
-      return set.has(id);
-    },
-    isUp(id){ // is id upstream of sel?
-      const all = this.arch.flatMap(c=>c.nodes); const seen=new Set(); const stack=[id];
-      while(stack.length){ const n=all.find(x=>x.id===stack.pop()); if(!n||seen.has(n.id)) continue; seen.add(n.id); if(n.id===this.sel) return true; stack.push(...n.to); }
-      return false;
-    }
-  };
-}
-</script>
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
-
-<div x-data="app()" x-init="init()">
-
-  <!-- Nav -->
-  <header class="wrap flex items-center justify-between" style="padding-block:18px">
-    <div class="flex items-center gap-2 font-semibold">
-      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="9" height="9" rx="2" fill="var(--accent)"/><rect x="12" y="1" width="9" height="9" rx="2" fill="var(--ink)" opacity=".85"/><rect x="1" y="12" width="9" height="9" rx="2" fill="var(--ink)" opacity=".85"/><rect x="12" y="12" width="9" height="9" rx="2" fill="var(--accent)" opacity=".5"/></svg>
-      <span x-text="brand"></span>
-    </div>
-    <nav class="hidden md:flex gap-6 text-sm muted">
-      <a href="#platform">Platform</a><a href="#architecture">Architecture</a><a href="#products">Data products</a>
+  <header class="wrap nav">
+    <a class="brand" href="#top" id="top">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+        <rect class="logo-a" x="1" y="1" width="9" height="9" rx="2"/>
+        <rect class="logo-b" x="12" y="1" width="9" height="9" rx="2"/>
+        <rect class="logo-b" x="1" y="12" width="9" height="9" rx="2"/>
+        <rect class="logo-c" x="12" y="12" width="9" height="9" rx="2"/>
+      </svg>
+      <span data-bind="brand"></span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#platform">Platform</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#products">Data products</a>
     </nav>
     <a href="#architecture" class="btn btn-primary">See the architecture</a>
   </header>
 
-  <!-- Hero -->
-  <section class="wrap" style="padding-block:56px 64px;border-top:0">
-    <p class="eyebrow">Enterprise data platform</p>
-    <h1 class="mt-3 text-4xl md:text-6xl font-bold max-w-3xl" x-text="headline"></h1>
-    <p class="mt-5 text-lg muted max-w-2xl" x-text="sub"></p>
-    <div class="mt-7 flex flex-wrap gap-3">
-      <a href="#platform" class="btn btn-primary">Explore the platform</a>
-      <a href="#products" class="btn btn-ghost">Browse data products</a>
-    </div>
-    <div class="flow mt-12" aria-label="Data flow from sources to consumers">
-      <div class="rail"><span class="pkt"></span><span class="pkt"></span><span class="pkt"></span></div>
-      <template x-for="s in flow" :key="s.name">
-        <div class="stage"><b x-text="s.name"></b><span class="muted mono" style="font-size:11.5px" x-text="s.note"></span></div>
-      </template>
-    </div>
-  </section>
-
-  <!-- Value props -->
-  <section class="wrap">
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-      <template x-for="v in values" :key="v.t">
-        <div style="min-width:0">
-          <h3 class="text-xl font-medium" x-text="v.t"></h3>
-          <p class="mt-2 muted" x-text="v.d"></p>
-        </div>
-      </template>
-    </div>
-  </section>
-
-  <!-- Pillars -->
-  <section id="platform" class="wrap">
-    <p class="eyebrow">The platform</p>
-    <h2 class="mt-2 text-3xl md:text-4xl font-bold">Four layers. One governed flow.</h2>
-    <div class="mt-8 flex flex-wrap gap-2" role="tablist">
-      <template x-for="(p,i) in pillars" :key="p.name">
-        <button class="tab" role="tab" :aria-selected="active===i" @click="pick(i)" x-text="p.name"></button>
-      </template>
-    </div>
-    <div class="progress mt-4" x-show="auto"><i x-effect="tick; $el.classList.remove('run'); void $el.offsetWidth; auto && $el.classList.add('run')"></i></div>
-
-    <template x-for="(p,i) in pillars" :key="p.name">
-      <div x-show="active===i" class="fade-in mt-6">
-        <h3 class="text-2xl font-medium" x-text="p.title"></h3>
-        <div class="grid md:grid-cols-3 gap-4 mt-5">
-          <template x-for="c in p.caps" :key="c.t">
-            <article class="panel cap">
-              <div class="snip">
-                <!-- stream -->
-                <template x-if="c.snip==='stream'"><div class="grid gap-2">
-                  <div class="row"><span class="mono">orders.cdc</span><span class="chip"><span class="dot" style="background:var(--ok)"></span>live</span></div>
-                  <div class="row muted"><span>Lag</span><span class="mono">0.8s</span></div>
-                  <div class="row muted"><span>Events / min</span><span class="mono">12,480</span></div>
-                  <svg viewBox="0 0 200 50" class="w-full mt-1" aria-hidden="true"><polyline fill="none" stroke="var(--accent)" stroke-width="2" points="0,38 20,30 40,34 60,22 80,26 100,14 120,20 140,12 160,18 180,8 200,12"/><circle cx="200" cy="12" r="3" fill="var(--accent)"/></svg>
-                </div></template>
-                <!-- schema -->
-                <template x-if="c.snip==='schema'"><div class="grid gap-2">
-                  <div class="row"><span class="mono">customer.v4</span><span class="chip">backward compatible</span></div>
-                  <div class="code"><span class="k">+</span> loyalty_tier  <span class="s">string</span>
-  customer_id   <span class="s">uuid</span>
-  email         <span class="s">string</span> · pii
-<span style="color:var(--bad)">−</span> fax_number    <span class="s">string</span></div>
-                  <div class="row muted"><span>Checked against 14 consumers</span><span style="color:var(--ok)">Pass</span></div>
-                </div></template>
-                <!-- connectors -->
-                <template x-if="c.snip==='connectors'"><div class="grid grid-cols-3 gap-2">
-                  <template x-for="s in ['SAP','Salesforce','Workday','Postgres','Kafka','S3']" :key="s">
-                    <div class="panel text-center py-3" style="border-radius:10px"><span class="mono" x-text="s"></span></div>
-                  </template>
-                  <div class="col-span-3 muted mt-1">6 of 42 connectors shown</div>
-                </div></template>
-                <!-- lineage -->
-                <template x-if="c.snip==='lineage'">
-                  <svg viewBox="0 0 240 140" class="w-full" aria-label="Lineage graph">
-                    <g fill="none" stroke="var(--line)" stroke-width="1.5"><path d="M62 25 C95 25 95 70 128 70"/><path d="M62 70 H128"/><path d="M62 115 C95 115 95 70 128 70"/><path d="M178 70 H200"/></g>
-                    <g font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--ink)">
-                      <rect x="2" y="14" width="60" height="22" rx="5" fill="var(--surface)" stroke="var(--line)"/><text x="8" y="28">erp.orders</text>
-                      <rect x="2" y="59" width="60" height="22" rx="5" fill="var(--surface)" stroke="var(--line)"/><text x="8" y="73">crm.accts</text>
-                      <rect x="2" y="104" width="60" height="22" rx="5" fill="var(--surface)" stroke="var(--line)"/><text x="8" y="118">fx_rates</text>
-                      <rect x="128" y="59" width="50" height="22" rx="5" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="134" y="73">fct_rev</text>
-                      <rect x="200" y="59" width="38" height="22" rx="5" fill="var(--surface)" stroke="var(--line)"/><text x="205" y="73">ARR</text>
-                    </g>
-                  </svg>
-                </template>
-                <!-- quality -->
-                <template x-if="c.snip==='quality'"><div class="grid gap-2">
-                  <template x-for="q in [['unique(order_id)','ok'],['not_null(customer_id)','ok'],['accepted_values(status)','ok'],['row_count Δ < 20%','warn']]" :key="q[0]">
-                    <div class="row"><span class="mono" x-text="q[0]"></span><span class="chip"><span class="dot" :style="'background:var(--'+q[1]+')'"></span><span x-text="q[1]==='ok'?'pass':'review'"></span></span></div>
-                  </template>
-                  <div class="muted mt-1">Last run 06:02 · 128 tests</div>
-                </div></template>
-                <!-- freshness -->
-                <template x-if="c.snip==='freshness'"><div class="grid gap-3">
-                  <template x-for="f in [['fct_revenue',92,'12m / 1h'],['dim_customer',70,'35m / 1h'],['churn_features',30,'19h / 24h']]" :key="f[0]">
-                    <div><div class="row"><span class="mono" x-text="f[0]"></span><span class="muted mono" x-text="f[2]"></span></div><div class="bar mt-1"><i :style="'width:'+f[1]+'%'"></i></div></div>
-                  </template>
-                  <div class="muted">Age vs. SLA · all within target</div>
-                </div></template>
-                <!-- contract -->
-                <template x-if="c.snip==='contract'"><div class="code"><span class="k">product</span>: customer_360
-<span class="k">version</span>: <span class="s">3.2.0</span>
-<span class="k">owner</span>: sales-ops@northwind
-<span class="k">freshness</span>: <span class="s">1h</span>
-<span class="k">grain</span>: one row per customer
-<span class="k">schema</span>:
-  customer_id: uuid, pk
-  lifetime_value: decimal(12,2)</div></template>
-                <!-- catalog -->
-                <template x-if="c.snip==='catalog'"><div class="grid gap-2">
-                  <div class="panel px-3 py-2 muted" style="border-radius:8px">Search: "active customers"</div>
-                  <template x-for="r in [['Customer 360','Sales Ops','98'],['Subscriptions','Billing','94'],['Web Sessions','Marketing','87']]" :key="r[0]">
-                    <div class="row"><span><b x-text="r[0]" style="font-weight:500"></b> <span class="muted" x-text="'· '+r[1]"></span></span><span class="chip" x-text="'trust '+r[2]"></span></div>
-                  </template>
-                </div></template>
-                <!-- api -->
-                <template x-if="c.snip==='api'"><div class="grid gap-2">
-                  <div class="row"><span class="chip" style="color:var(--accent)">GET</span><span class="mono" style="font-size:11px">/products/customer-360/{id}</span></div>
-                  <div class="code">{
-  <span class="k">"customer_id"</span>: <span class="s">"c-20931"</span>,
-  <span class="k">"segment"</span>: <span class="s">"enterprise"</span>,
-  <span class="k">"lifetime_value"</span>: 184250.00
-}</div>
-                  <div class="row muted"><span>p95 latency</span><span class="mono">38 ms</span></div>
-                </div></template>
-                <!-- access -->
-                <template x-if="c.snip==='access'"><div class="grid gap-2">
-                  <template x-for="a in [['Finance analyst','orders','full'],['Marketing','customer_360','masked'],['Contractor','customer_360','denied']]" :key="a[0]">
-                    <div class="row"><span><span x-text="a[0]"></span> <span class="muted mono" x-text="'→ '+a[1]"></span></span><span class="chip"><span class="dot" :style="'background:var(--'+(a[2]==='full'?'ok':a[2]==='masked'?'warn':'bad')+')'"></span><span x-text="a[2]"></span></span></div>
-                  </template>
-                  <div class="muted mt-1">Policy: purpose-based · reviewed quarterly</div>
-                </div></template>
-                <!-- pii -->
-                <template x-if="c.snip==='pii'"><div class="grid gap-2">
-                  <div class="row"><span class="mono">email</span><span class="mono muted">j•••@acme.com</span></div>
-                  <div class="row"><span class="mono">phone</span><span class="mono muted">+1 •••-•••-4471</span></div>
-                  <div class="row"><span class="mono">dob</span><span class="mono muted">19••-••-••</span></div>
-                  <div class="row"><span class="mono">region</span><span class="mono">Midwest</span></div>
-                  <div class="muted mt-1">3 PII columns found at ingest · auto-masked</div>
-                </div></template>
-                <!-- cost -->
-                <template x-if="c.snip==='cost'"><div class="grid gap-2">
-                  <template x-for="k in [['Customer 360',4200,100],['Orders & Revenue',2900,69],['Churn Features',1650,39],['Web Sessions',880,21]]" :key="k[0]">
-                    <div><div class="row"><span x-text="k[0]"></span><span class="mono" x-text="'$'+k[1].toLocaleString()+'/mo'"></span></div><div class="bar mt-1"><i :style="'width:'+k[2]+'%'"></i></div></div>
-                  </template>
-                </div></template>
-              </div>
-              <div>
-                <h4 class="font-semibold" x-text="c.t"></h4>
-                <p class="muted mt-1" x-text="c.d"></p>
-              </div>
-            </article>
-          </template>
-        </div>
+  <main id="main">
+    <!-- Hero -->
+    <section class="wrap hero">
+      <p class="eyebrow" data-bind="eyebrow"></p>
+      <h1 data-bind="headline"></h1>
+      <p class="lead" data-bind="sub"></p>
+      <div class="actions">
+        <a href="#platform" class="btn btn-primary">Explore the platform</a>
+        <a href="#products" class="btn btn-ghost">Browse data products</a>
       </div>
-    </template>
-  </section>
-
-  <!-- Architecture -->
-  <section id="architecture" class="wrap">
-    <p class="eyebrow">Architecture</p>
-    <h2 class="mt-2 text-3xl md:text-4xl font-bold">Click any component to trace its flow.</h2>
-    <p class="mt-3 muted max-w-2xl">Selecting a component highlights everything upstream and downstream of it.</p>
-    <div class="mt-8 grid lg:grid-cols-[1fr_300px] gap-6">
-      <div style="overflow-x:auto;min-width:0" class="pb-2">
-        <div class="arch">
-          <template x-for="c in arch" :key="c.col">
-            <div class="col">
-              <h4 x-text="c.col"></h4>
-              <div class="grid gap-3">
-                <template x-for="n in c.nodes" :key="n.id">
-                  <button class="node" :class="{on: sel===n.id, hot: sel!==n.id && related(n.id), dim: !related(n.id)}" @click="sel=n.id">
-                    <span x-text="n.name"></span><small x-text="n.tech"></small>
-                  </button>
-                </template>
-              </div>
-            </div>
-          </template>
-        </div>
+      <div class="flow" id="flow" aria-label="Data flow from sources to consumers">
+        <div class="rail" aria-hidden="true"><span class="pkt"></span><span class="pkt"></span><span class="pkt"></span></div>
       </div>
-      <aside class="panel p-5 detail" style="align-self:start">
-        <p class="eyebrow" x-text="node(sel).col"></p>
-        <h3 class="text-2xl font-medium mt-1" x-text="node(sel).name"></h3>
-        <span class="chip mt-2" x-text="node(sel).tech"></span>
-        <p class="mt-4" x-text="details[sel]"></p>
-        <p class="muted mt-4 text-sm" x-show="node(sel).to.length">Feeds <span class="mono" x-text="node(sel).to.map(t=>node(t).name).join(', ')"></span></p>
-      </aside>
-    </div>
-  </section>
+    </section>
 
-  <!-- Products -->
-  <section id="products" class="wrap">
-    <p class="eyebrow">Data products</p>
-    <h2 class="mt-2 text-3xl md:text-4xl font-bold">What teams use today.</h2>
-    <div class="panel mt-8" style="overflow-x:auto">
-      <table class="w-full text-left" style="min-width:560px">
-        <thead><tr class="muted mono" style="font-size:12px">
-          <th class="px-5 py-3 font-normal">Product</th><th class="px-5 py-3 font-normal">Owner</th><th class="px-5 py-3 font-normal">Freshness</th><th class="px-5 py-3 font-normal text-right">Uptime (30d)</th><th class="px-5 py-3 font-normal text-right">Weekly users</th><th class="px-5 py-3 font-normal">Status</th>
-        </tr></thead>
-        <tbody>
-          <template x-for="p in products" :key="p.name">
-            <tr style="border-top:1px solid var(--line)">
-              <td class="px-5 py-3 font-medium" x-text="p.name"></td>
-              <td class="px-5 py-3 muted" x-text="p.owner"></td>
-              <td class="px-5 py-3 mono" x-text="p.fresh"></td>
-              <td class="px-5 py-3 mono text-right" x-text="p.uptime.toFixed(2)+'%'"></td>
-              <td class="px-5 py-3 mono text-right" x-text="p.users"></td>
-              <td class="px-5 py-3"><span class="chip"><span class="dot" :style="'background:var(--'+p.status+')'"></span><span x-text="p.status==='ok'?'Healthy':'SLA at risk'"></span></span></td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <!-- Value props -->
+    <section class="wrap">
+      <div class="values" id="values"></div>
+    </section>
 
-  <!-- CTA -->
-  <section class="wrap text-center">
-    <h2 class="text-3xl md:text-4xl font-bold">Build your next product on the platform.</h2>
-    <p class="mt-3 muted">Talk to the platform team to onboard a source or publish a data product.</p>
-    <div class="mt-6 flex justify-center gap-3 flex-wrap">
-      <a href="#platform" class="btn btn-primary">Start onboarding</a>
-      <a href="#architecture" class="btn btn-ghost">Review the architecture</a>
-    </div>
-    <p class="mt-12 muted mono" style="font-size:12px">Demo content · single HTML file · Tailwind + Alpine.js from CDN · no server</p>
-  </section>
+    <!-- Platform pillars -->
+    <section class="wrap" id="platform">
+      <p class="eyebrow" data-bind="platform.eyebrow"></p>
+      <h2 data-bind="platform.title"></h2>
+      <div class="tabs" role="tablist" id="tabs" aria-label="Platform layers"></div>
+      <div class="progress" id="progress" aria-hidden="true"><i></i></div>
+      <div id="panels"></div>
+    </section>
 
-</div>
+    <!-- Architecture -->
+    <section class="wrap" id="architecture">
+      <p class="eyebrow" data-bind="architecture.eyebrow"></p>
+      <h2 data-bind="architecture.title"></h2>
+      <p class="lead" data-bind="architecture.intro"></p>
+      <div class="arch-layout">
+        <div class="arch-scroll"><div class="arch" id="arch"></div></div>
+        <aside class="panel detail" id="detail" aria-live="polite">
+          <p class="eyebrow" id="d-col"></p>
+          <h3 id="d-name"></h3>
+          <span class="chip" id="d-tech"></span>
+          <p id="d-text"></p>
+          <p class="muted small" id="d-feeds"></p>
+        </aside>
+      </div>
+    </section>
 
+    <!-- Data products -->
+    <section class="wrap" id="products">
+      <p class="eyebrow" data-bind="products.eyebrow"></p>
+      <h2 data-bind="products.title"></h2>
+      <div class="panel table-scroll">
+        <table>
+          <thead>
+            <tr><th>Product</th><th>Owner</th><th>Freshness</th><th class="num">Uptime (30d)</th><th class="num">Weekly users</th><th>Status</th></tr>
+          </thead>
+          <tbody id="product-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Closing -->
+    <section class="wrap closing">
+      <h2 data-bind="cta.title"></h2>
+      <p class="muted" data-bind="cta.text"></p>
+      <div class="actions center">
+        <a href="#platform" class="btn btn-primary">Start onboarding</a>
+        <a href="#architecture" class="btn btn-ghost">Review the architecture</a>
+      </div>
+      <p class="footnote" data-bind="footer"></p>
+    </section>
+  </main>
+
+  <noscript><p class="wrap">This page needs JavaScript turned on to show its content.</p></noscript>
 </body>
 </html>
